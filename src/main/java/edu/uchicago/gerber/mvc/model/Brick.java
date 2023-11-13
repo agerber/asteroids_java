@@ -1,10 +1,13 @@
 package edu.uchicago.gerber.mvc.model;
 
+import edu.uchicago.gerber.mvc.controller.CommandCenter;
+import edu.uchicago.gerber.mvc.controller.Sound;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
-import java.awt.Point;
 
 public class Brick extends Sprite {
 
@@ -48,4 +51,11 @@ public class Brick extends Sprite {
 		//do NOT call super.move() and do nothing; a brick does not move.
 	}
 
+	@Override
+	public void remove(LinkedList<Movable> list) {
+		super.remove(list);
+		CommandCenter.getInstance().setScore(CommandCenter.getInstance().getScore() + 1000);
+		Sound.playSound("rock.wav");
+
+	}
 } //end class

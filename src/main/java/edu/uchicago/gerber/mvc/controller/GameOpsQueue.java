@@ -2,44 +2,22 @@ package edu.uchicago.gerber.mvc.controller;
 
 import edu.uchicago.gerber.mvc.model.Movable;
 
-import java.util.*;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.LinkedBlockingDeque;
+
 
 
 /**
- * Effectively a Queue that enqueues and dequeues Game Operations (add/remove)
+ * Effectively a Queue that enqueues and dequeues Game Operations (add/remove).
+ * enqueue() may be called by main and animation threads simultaneously, therefore we
+ * use a data structure from the java.util.concurrent package.
  */
-public class GameOpsQueue extends LinkedList<GameOp> {
-
-    //this data structure is in contention by the "Event Dispatch" thread aka main-swing-thread, and the animation
-    // thread.  For example, enqueues may happen either as a result of a keystroke such as a bullet-fire
-    // (main-swing-thread) or a collision (animation-thread). We must restrict access to it by one thread at a
-    // time by using a Lock.
-    private final Lock lock;
-
-    public GameOpsQueue() {
-        lock =   new ReentrantLock();
-    }
-
+public class GameOpsQueue extends LinkedBlockingDeque<GameOp> {
 
     public void enqueue(Movable mov, GameOp.Action action) {
-       try {
-            lock.lock();
-            addLast(new GameOp(mov, action));
-        } finally {
-            lock.unlock();
-        }
+        addLast(new GameOp(mov, action));
     }
 
-
     public GameOp dequeue() {
-        try {
-            lock.lock();
-               return removeFirst();
-        } finally {
-            lock.unlock();
-        }
-
+        return removeFirst();
     }
 }

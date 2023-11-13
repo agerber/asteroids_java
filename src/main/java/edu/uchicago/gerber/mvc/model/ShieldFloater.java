@@ -1,8 +1,11 @@
 package edu.uchicago.gerber.mvc.model;
 
+import edu.uchicago.gerber.mvc.controller.CommandCenter;
 import edu.uchicago.gerber.mvc.controller.Game;
+import edu.uchicago.gerber.mvc.controller.Sound;
 
 import java.awt.*;
+import java.util.LinkedList;
 
 public class ShieldFloater extends Floater {
 	//spawn every 25 seconds
@@ -10,6 +13,17 @@ public class ShieldFloater extends Floater {
 	public ShieldFloater() {
 		setColor(Color.CYAN);
 		setExpiry(260);
+	}
+
+	@Override
+	public void remove(LinkedList<Movable> list) {
+		super.remove(list);
+		//if getExpiry() > 0, then this remove was the result of a collision, rather than natural mortality
+		if (getExpiry() > 0) {
+			Sound.playSound("shieldup.wav");
+		    CommandCenter.getInstance().getFalcon().setShield(Falcon.MAX_SHIELD);
+	   }
+
 	}
 
 

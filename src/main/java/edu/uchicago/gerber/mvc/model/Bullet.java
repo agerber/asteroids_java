@@ -1,7 +1,10 @@
 package edu.uchicago.gerber.mvc.model;
 
+import edu.uchicago.gerber.mvc.controller.Sound;
+
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Bullet extends Sprite {
@@ -59,5 +62,12 @@ public class Bullet extends Sprite {
     @Override
     public void draw(Graphics g) {
            renderVector(g);
+    }
+
+    @Override
+    public void add(LinkedList<Movable> list) {
+        super.add(list);
+        Sound.playSound("thump.wav");
+
     }
 }

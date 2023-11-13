@@ -130,7 +130,7 @@ public class GamePanel extends Panel {
     private void drawNumFrame(Graphics g) {
         g.setColor(Color.white);
         g.setFont(fontNormal);
-        g.drawString("JAVA :  " + CommandCenter.getInstance().getFrame(), fontWidth,
+        g.drawString("FRAME :  " + CommandCenter.getInstance().getFrame(), fontWidth,
                 Game.DIM.height  - (fontHeight + 22));
 
     }
@@ -161,7 +161,7 @@ public class GamePanel extends Panel {
         g.drawRect(xVal, yVal, 100, 10);
     }
 
-
+    @Override
     public void update(Graphics g) {
 
         // The following "off" vars are used for the off-screen double-buffered image.

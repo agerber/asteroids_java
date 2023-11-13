@@ -5,9 +5,7 @@ package edu.uchicago.gerber.mvc.controller;
 import edu.uchicago.gerber.mvc.model.*;
 import lombok.Data;
 
-import java.awt.*;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -31,10 +29,10 @@ public class CommandCenter {
 	private final Falcon falcon  = new Falcon();
 
 	//lists containing our movables subdivided by team
-	private final List<Movable> movDebris = new LinkedList<>();
-	private final List<Movable> movFriends = new LinkedList<>();
-	private final List<Movable> movFoes = new LinkedList<>();
-	private final List<Movable> movFloaters = new LinkedList<>();
+	private final LinkedList<Movable> movDebris = new LinkedList<>();
+	private final LinkedList<Movable> movFriends = new LinkedList<>();
+	private final LinkedList<Movable> movFoes = new LinkedList<>();
+	private final LinkedList<Movable> movFloaters = new LinkedList<>();
 
 	private final GameOpsQueue opsQueue = new GameOpsQueue();
 
@@ -62,9 +60,9 @@ public class CommandCenter {
 		setLevel(0);
 		setScore(0);
 		setPaused(false);
-		//set to one greater than number of falcons lives in your game as initFalconAndDecrementNum() also decrements
+		//set to one greater than number of falcons lives in your game as decrementFalconNumAndSpawn() also decrements
 		setNumFalcons(4);
-		initFalconAndDecrementFalconNum();
+		falcon.decrementFalconNumAndSpawn();
 		//add the falcon to the movFriends list
 		opsQueue.enqueue(falcon, GameOp.Action.ADD);
 
@@ -82,24 +80,6 @@ public class CommandCenter {
 	}
 
 
-
-
-	public void initFalconAndDecrementFalconNum(){
-		numFalcons--;
-		if (isGameOver()) return;
-		Sound.playSound("shipspawn.wav");
-		falcon.setShield(Falcon.INITIAL_SPAWN_TIME);
-		falcon.setInvisible(Falcon.INITIAL_SPAWN_TIME/4);
-		//put falcon in the middle of the game-space
-		falcon.setCenter(new Point(Game.DIM.width / 2, Game.DIM.height / 2));
-		//random number between 0-360 in steps of TURN_STEP
-		falcon.setOrientation(Game.R.nextInt(360 / Falcon.TURN_STEP) * Falcon.TURN_STEP);
-		falcon.setDeltaX(0);
-		falcon.setDeltaY(0);
-		falcon.setRadius(Falcon.MIN_RADIUS);
-		falcon.setMaxSpeedAttained(false);
-		falcon.setNukeMeter(0);
-	}
 
 	public void incrementFrame(){
 		//use of ternary expression to simplify the logic to one line

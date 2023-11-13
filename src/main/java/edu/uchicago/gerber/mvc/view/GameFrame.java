@@ -1,8 +1,8 @@
 package edu.uchicago.gerber.mvc.view;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.WindowEvent;
 
 public class GameFrame extends JFrame {
 

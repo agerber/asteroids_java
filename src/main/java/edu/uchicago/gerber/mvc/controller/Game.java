@@ -3,13 +3,15 @@ package edu.uchicago.gerber.mvc.controller;
 import edu.uchicago.gerber.mvc.model.*;
 import edu.uchicago.gerber.mvc.view.GamePanel;
 
-
 import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Random;
+
+import static edu.uchicago.gerber.mvc.model.Movable.Team.DEBRIS;
 
 
 // ===============================================
@@ -70,6 +72,7 @@ public class Game implements Runnable, KeyListener {
 
         //fire up the animation thread
         animationThread = new Thread(this); // pass the animation thread a runnable object, the Game object
+        animationThread.setDaemon(true);
         animationThread.start();
 
 
@@ -88,7 +91,7 @@ public class Game implements Runnable, KeyListener {
     @Override
     public void run() {
 
-        // lower animation thread's priority, thereby yielding to the "main" aka 'Event Dispatch'
+        // lower animation thread's priority, thereby yielding to the 'Event Dispatch Thread' or EDT
         // thread which listens to keystrokes
         animationThread.setPriority(Thread.MIN_PRIORITY);
 
@@ -136,10 +139,9 @@ public class Game implements Runnable, KeyListener {
 
     private void checkCollisions() {
 
+        //This has order-of-growth of O(FOES * FRIENDS)
         Point pntFriendCenter, pntFoeCenter;
         int radFriend, radFoe;
-
-        //This has order-of-growth of O(n^2), there is no way around this.
         for (Movable movFriend : CommandCenter.getInstance().getMovFriends()) {
             for (Movable movFoe : CommandCenter.getInstance().getMovFoes()) {
 
@@ -150,27 +152,15 @@ public class Game implements Runnable, KeyListener {
 
                 //detect collision
                 if (pntFriendCenter.distance(pntFoeCenter) < (radFriend + radFoe)) {
-                    //remove the friend (so long as he is not protected)
-                    if (!movFriend.isProtected()) {
-                        CommandCenter.getInstance().getOpsQueue().enqueue(movFriend, GameOp.Action.REMOVE);
-                    }
-
-                    //remove the foe
+                    //enqueue the friend
+                    CommandCenter.getInstance().getOpsQueue().enqueue(movFriend, GameOp.Action.REMOVE);
+                    //enqueue the foe
                     CommandCenter.getInstance().getOpsQueue().enqueue(movFoe, GameOp.Action.REMOVE);
-
-                    if (movFoe instanceof Brick) {
-                        CommandCenter.getInstance().setScore(CommandCenter.getInstance().getScore() + 1000);
-                        Sound.playSound("rock.wav");
-                    } else {
-                        CommandCenter.getInstance().setScore(CommandCenter.getInstance().getScore() + 10);
-                        Sound.playSound("kapow.wav");
-                    }
                 }
-
             }//end inner for
         }//end outer for
 
-        //check for collisions between falcon and floaters. Order of growth of O(n) where n is number of floaters
+        //check for collisions between falcon and floaters. Order of growth of O(FLOATERS)
         Point pntFalCenter = CommandCenter.getInstance().getFalcon().getCenter();
         int radFalcon = CommandCenter.getInstance().getFalcon().getRadius();
 
@@ -179,28 +169,10 @@ public class Game implements Runnable, KeyListener {
         for (Movable movFloater : CommandCenter.getInstance().getMovFloaters()) {
             pntFloaterCenter = movFloater.getCenter();
             radFloater = movFloater.getRadius();
-
             //detect collision
             if (pntFalCenter.distance(pntFloaterCenter) < (radFalcon + radFloater)) {
-
-                Class<? extends Movable> clazz = movFloater.getClass();
-                switch (clazz.getSimpleName()) {
-                    case "ShieldFloater":
-                        Sound.playSound("shieldup.wav");
-                        CommandCenter.getInstance().getFalcon().setShield(Falcon.MAX_SHIELD);
-                        break;
-                    case "NewWallFloater":
-                        Sound.playSound("insect.wav");
-                        buildWall();
-                        break;
-                    case "NukeFloater":
-                        Sound.playSound("nuke-up.wav");
-                        CommandCenter.getInstance().getFalcon().setNukeMeter(Falcon.MAX_NUKE);
-                        break;
-                }
+                //enqueue the floater
                 CommandCenter.getInstance().getOpsQueue().enqueue(movFloater, GameOp.Action.REMOVE);
-
-
             }//end if
         }//end for
 
@@ -209,75 +181,44 @@ public class Game implements Runnable, KeyListener {
     }//end meth
 
 
-    //this method adds and removes movables to/from their respective linked-lists
+    //This method adds and removes movables to/from their respective linked-lists.
     private void processGameOpsQueue() {
 
         //deferred mutation: these operations are done AFTER we have completed our collision detection to avoid
         // mutating the movable linkedlists while iterating them above.
         while (!CommandCenter.getInstance().getOpsQueue().isEmpty()) {
-            GameOp gameOp = CommandCenter.getInstance().getOpsQueue().dequeue();
-            Movable mov = gameOp.getMovable();
-            GameOp.Action action = gameOp.getAction();
 
+            GameOp gameOp = CommandCenter.getInstance().getOpsQueue().dequeue();
+
+            //given team, determine which linked-list this object will be added-to or removed-from
+            LinkedList<Movable> list;
+            Movable mov = gameOp.getMovable();
             switch (mov.getTeam()) {
                 case FOE:
-                    if (action == GameOp.Action.ADD) {
-                        CommandCenter.getInstance().getMovFoes().add(mov);
-                    } else { //GameOp.Operation.REMOVE
-                        CommandCenter.getInstance().getMovFoes().remove(mov);
-                        if (mov instanceof Asteroid) spawnSmallerAsteroidsOrDebris((Asteroid) mov);
-                    }
-
+                    list = CommandCenter.getInstance().getMovFoes();
                     break;
                 case FRIEND:
-                    if (action == GameOp.Action.ADD) {
-                        CommandCenter.getInstance().getMovFriends().add(mov);
-                    } else { //GameOp.Operation.REMOVE
-                        if (mov instanceof Falcon) {
-                            CommandCenter.getInstance().initFalconAndDecrementFalconNum();
-                        } else {
-                            CommandCenter.getInstance().getMovFriends().remove(mov);
-                        }
-                    }
+                    list = CommandCenter.getInstance().getMovFriends();
                     break;
-
                 case FLOATER:
-                    if (action == GameOp.Action.ADD) {
-                        CommandCenter.getInstance().getMovFloaters().add(mov);
-                    } else { //GameOp.Operation.REMOVE
-                        CommandCenter.getInstance().getMovFloaters().remove(mov);
-                    }
+                    list = CommandCenter.getInstance().getMovFloaters();
                     break;
-
                 case DEBRIS:
-                    if (action == GameOp.Action.ADD) {
-                        CommandCenter.getInstance().getMovDebris().add(mov);
-                    } else { //GameOp.Operation.REMOVE
-                        CommandCenter.getInstance().getMovDebris().remove(mov);
-                    }
-                    break;
-
-
+                default:
+                    list = CommandCenter.getInstance().getMovDebris();
             }
 
-        }
+            //pass the appropriate linked-list from above
+            //this block will execute the add() or remove() callbacks in the Movable models.
+            GameOp.Action action = gameOp.getAction();
+            if (action == GameOp.Action.ADD)
+                mov.add(list);
+            else //REMOVE
+                mov.remove(list);
+
+        }//end while
     }
 
-    //shows how to add walls or rectangular elements one brick at a time
-    private void buildWall() {
-        final int BRICK_SIZE = Game.DIM.width / 30, ROWS = 2, COLS = 20, X_OFFSET = BRICK_SIZE * 5, Y_OFFSET = 50;
-
-        for (int nCol = 0; nCol < COLS; nCol++) {
-            for (int nRow = 0; nRow < ROWS; nRow++) {
-                CommandCenter.getInstance().getOpsQueue().enqueue(
-                        new Brick(
-                                new Point(nCol * BRICK_SIZE + X_OFFSET, nRow * BRICK_SIZE + Y_OFFSET),
-                                BRICK_SIZE),
-                        GameOp.Action.ADD);
-
-            }
-        }
-    }
 
 
     private void spawnNewWallFloater() {
@@ -311,24 +252,7 @@ public class Game implements Runnable, KeyListener {
         }
     }
 
-    private void spawnSmallerAsteroidsOrDebris(Asteroid originalAsteroid) {
 
-        int size = originalAsteroid.getSize();
-        //small asteroids
-        if (size > 1) {
-            CommandCenter.getInstance().getOpsQueue().enqueue(new WhiteCloudDebris(originalAsteroid), GameOp.Action.ADD);
-        }
-        //med and large
-        else {
-            //for large (0) and medium (1) sized Asteroids only, spawn 2 or 3 smaller asteroids respectively
-            //We can use the existing variable (size) to do this
-            size += 2;
-            while (size-- > 0) {
-                CommandCenter.getInstance().getOpsQueue().enqueue(new Asteroid(originalAsteroid), GameOp.Action.ADD);
-            }
-        }
-
-    }
 
     private boolean isBrickFree() {
         //if there are no more Bricks on the screen
@@ -434,11 +358,12 @@ public class Game implements Runnable, KeyListener {
         //show the key-code in the console
         System.out.println(keyCode);
 
-
         switch (keyCode) {
             case FIRE:
                 CommandCenter.getInstance().getOpsQueue().enqueue(new Bullet(falcon), GameOp.Action.ADD);
-                Sound.playSound("thump.wav");
+                break;
+            case NUKE:
+                CommandCenter.getInstance().getOpsQueue().enqueue(new Nuke(falcon), GameOp.Action.ADD);
                 break;
             //releasing either the LEFT or RIGHT arrow key will set the TurnState to IDLE
             case LEFT:
@@ -449,14 +374,7 @@ public class Game implements Runnable, KeyListener {
                 falcon.setThrusting(false);
                 soundThrust.stop();
                 break;
-            case NUKE:
-                if (CommandCenter.getInstance().getFalcon().getNukeMeter() > 0){
-                    CommandCenter.getInstance().getOpsQueue().enqueue(new Nuke(falcon), GameOp.Action.ADD);
-                    Sound.playSound("nuke.wav");
-                    CommandCenter.getInstance().getFalcon().setNukeMeter(0);
-                }
 
-                break;
             case MUTE:
                 CommandCenter.getInstance().setMuted(!CommandCenter.getInstance().isMuted());
 

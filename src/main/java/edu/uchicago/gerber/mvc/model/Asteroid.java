@@ -1,13 +1,17 @@
 package edu.uchicago.gerber.mvc.model;
 
 
+import edu.uchicago.gerber.mvc.controller.CommandCenter;
+import edu.uchicago.gerber.mvc.controller.Game;
+import edu.uchicago.gerber.mvc.controller.GameOp;
+import edu.uchicago.gerber.mvc.controller.Sound;
+
+import java.awt.*;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-import java.awt.*;
-
-import edu.uchicago.gerber.mvc.controller.Game;
 
 
 public class Asteroid extends Sprite {
@@ -116,6 +120,32 @@ public class Asteroid extends Sprite {
 		renderVector(g);
 	}
 
+	@Override
+	public void remove(LinkedList<Movable> list) {
+		super.remove(list);
+		spawnSmallerAsteroidsOrDebris(this);
+		//give the user some points for destroying the asteroid
+		CommandCenter.getInstance().setScore(CommandCenter.getInstance().getScore() + 10L * (getSize() + 1));
+		Sound.playSound("kapow.wav");
 
+	}
 
+	private void spawnSmallerAsteroidsOrDebris(Asteroid originalAsteroid) {
+
+		int size = originalAsteroid.getSize();
+		//small asteroids
+		if (size > 1) {
+			CommandCenter.getInstance().getOpsQueue().enqueue(new WhiteCloudDebris(originalAsteroid), GameOp.Action.ADD);
+		}
+		//med and large
+		else {
+			//for large (0) and medium (1) sized Asteroids only, spawn 2 or 3 smaller asteroids respectively
+			//We can use the existing variable (size) to do this
+			size += 2;
+			while (size-- > 0) {
+				CommandCenter.getInstance().getOpsQueue().enqueue(new Asteroid(originalAsteroid), GameOp.Action.ADD);
+			}
+		}
+
+	}
 }
