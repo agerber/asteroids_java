@@ -6,8 +6,6 @@ import edu.uchicago.gerber.mvc.model.*;
 import lombok.Data;
 
 import java.util.LinkedList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 //The CommandCenter is a singleton that manages the state of the game.
 //the lombok @Data gives us automatic getters and setters on all members
@@ -36,8 +34,6 @@ public class CommandCenter {
 
 	private final GameOpsQueue opsQueue = new GameOpsQueue();
 
-	//for sound playing. Limit the number of threads to 5 at a time.
-	private final ThreadPoolExecutor soundExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(5);
 
 	//singleton
 	private static CommandCenter instance = null;
@@ -60,7 +56,7 @@ public class CommandCenter {
 		setLevel(0);
 		setScore(0);
 		setPaused(false);
-		//set to one greater than number of falcons lives in your game as decrementFalconNumAndSpawn() also decrements
+		//set to one greater than number of falcons lives in your game as initFalconAndDecrementNum() also decrements
 		setNumFalcons(4);
 		falcon.decrementFalconNumAndSpawn();
 		//add the falcon to the movFriends list

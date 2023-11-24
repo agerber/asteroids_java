@@ -109,7 +109,8 @@ public class Game implements Runnable, KeyListener {
             checkCollisions();
             checkNewLevel();
             checkFloaters();
-
+            //this method will execute add() and remove() callbacks on Movable objects
+            processGameOpsQueue();
             //keep track of the frame for development purposes
             CommandCenter.getInstance().incrementFrame();
 
@@ -175,8 +176,6 @@ public class Game implements Runnable, KeyListener {
                 CommandCenter.getInstance().getOpsQueue().enqueue(movFloater, GameOp.Action.REMOVE);
             }//end if
         }//end for
-
-        processGameOpsQueue();
 
     }//end meth
 
@@ -292,7 +291,8 @@ public class Game implements Runnable, KeyListener {
             spawnBigAsteroids(level);
             //make falcon invincible momentarily in case new asteroids spawn on top of him, and give player
             //time to adjust to new asteroids in game space.
-            CommandCenter.getInstance().getFalcon().setShield(Falcon.INITIAL_SPAWN_TIME);
+            if (CommandCenter.getInstance().getFalcon().getShield() < Falcon.INITIAL_SPAWN_TIME)
+                CommandCenter.getInstance().getFalcon().setShield(Falcon.INITIAL_SPAWN_TIME);
             //show "Level X" in middle of screen
             CommandCenter.getInstance().getFalcon().setShowLevel(Falcon.INITIAL_SPAWN_TIME);
 

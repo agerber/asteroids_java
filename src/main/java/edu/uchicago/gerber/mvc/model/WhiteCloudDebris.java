@@ -9,6 +9,8 @@ import java.util.Map;
 public class WhiteCloudDebris extends Sprite{
 
    private int index = 0;
+   //the higher the number, the slower the animation
+   private final static int SLOW_MO = 3;
 
     public WhiteCloudDebris(Sprite explodingSprite) {
 
@@ -29,8 +31,8 @@ public class WhiteCloudDebris extends Sprite{
 
         setRasterMap(rasterMap);
 
-        //expire it out after it has done its animation. Multiply by 2 to slow down the animation
-        setExpiry(rasterMap.size() * 2);
+        //expire it out after it has done its animation. Multiply by SLOW_MO to slow down the animation
+        setExpiry(rasterMap.size() * SLOW_MO);
 
         //everything is relative to the exploding sprite
         setSpin(explodingSprite.getSpin());
@@ -51,9 +53,9 @@ public class WhiteCloudDebris extends Sprite{
 
 
         renderRaster((Graphics2D) g, getRasterMap().get(index));
-        //hold the image for two frames to slow down the dust cloud animation
+        //hold the image for SLOW_MO frames to slow down the dust cloud animation
         //we already have a simple decrement-to-zero counter with expiry; see move() method of Sprite.
-        if (getExpiry() % 2 == 0) index++;
+        if (getExpiry() % SLOW_MO == 0) index++;
 
 
     }

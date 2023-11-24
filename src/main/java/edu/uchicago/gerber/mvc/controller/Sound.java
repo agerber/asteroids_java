@@ -5,15 +5,19 @@ import javax.sound.sampled.*;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class Sound {
 
+	//for sound playing. Limit the number of threads to 5 at a time.
+	private static final ThreadPoolExecutor soundExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(5);
 
 	//for individual wav sounds (not looped)
 	//http://stackoverflow.com/questions/26305/how-can-i-play-sound-in-java
 	public static void playSound(final String strPath) {
 
-		CommandCenter.getInstance().getSoundExecutor().execute(new Runnable() {
+		soundExecutor.execute(new Runnable() {
 			public void run() {
 				try {
 					Clip clp = AudioSystem.getClip();
