@@ -222,16 +222,12 @@ public class GamePanel extends Panel {
     @SafeVarargs
     private final void moveDrawMovables(final Graphics g, List<Movable>... teams) {
 
-        BiConsumer<Movable, Graphics> moveDraw = (mov, grp) -> {
-            mov.move();
-            mov.draw(grp);
-        };
-
-
-        Arrays.stream(teams) //Stream<List<Movable>>
-                //we use flatMap to flatten the teams (List<Movable>[]) passed-in above into a single stream of Movables
-                .flatMap(Collection::stream) //Stream<Movable>
-                .forEach(m -> moveDraw.accept(m, g));
+        for (List<Movable> team : teams) {
+            for (Movable mov : team) {
+                mov.move();
+                mov.draw(g);
+            }
+        }
 
 
     }
