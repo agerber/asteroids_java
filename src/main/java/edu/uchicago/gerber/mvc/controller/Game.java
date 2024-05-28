@@ -206,7 +206,7 @@ public class Game implements Runnable, KeyListener {
             }
 
             //pass the appropriate linked-list from above
-            //this block will execute the add() or remove() callbacks in the Movable models.
+            //this block will execute the addToGame() or removeFromGame() callbacks in the Movable models.
             GameOp.Action action = gameOp.getAction();
             if (action == GameOp.Action.ADD)
                 mov.addToGame(list);

@@ -21,6 +21,7 @@ public interface Movable {
 	//callbacks which occur before or after this object is added or removed from the game-space.
 	//this is your opportunity to add sounds or perform other side effects, before (add) or after (remove).
 	//The 'list' parameter will be one of the following: movFriends, movFoes, movDebris, movFloaters.
+	//See processGameOpsQueue() of Game class
 	void addToGame(LinkedList<Movable> list);
 
 	void removeFromGame(LinkedList<Movable> list);
