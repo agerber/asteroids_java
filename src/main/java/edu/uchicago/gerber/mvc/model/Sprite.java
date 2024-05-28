@@ -241,7 +241,8 @@ public abstract class Sprite implements Movable {
         //#########################################
     }
 
-    //default behavior for adding and removing objects from game space
+    //default behavior for adding and removing objects from game space.
+    //The 'list' parameter will be one of the following: movFriends, movFoes, movDebris, movFloaters.
     @Override
     public void addToGame(LinkedList<Movable> list) {
         list.add(this);
