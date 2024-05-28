@@ -65,8 +65,8 @@ public class Bullet extends Sprite {
     }
 
     @Override
-    public void add(LinkedList<Movable> list) {
-        super.add(list);
+    public void addToGame(LinkedList<Movable> list) {
+        super.addToGame(list);
         Sound.playSound("thump.wav");
 
     }

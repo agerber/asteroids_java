@@ -16,8 +16,8 @@ public class NukeFloater extends Floater {
 	}
 
 	@Override
-	public void remove(LinkedList<Movable> list) {
-		super.remove(list);
+	public void removeFromGame(LinkedList<Movable> list) {
+		super.removeFromGame(list);
 		//if getExpiry() > 0, then this remove was the result of a collision, rather than natural mortality
 		if (getExpiry() > 0) {
 			Sound.playSound("nuke-up.wav");

@@ -181,7 +181,7 @@ public class Falcon extends Sprite {
 	}
 
 	@Override
-	public void remove(LinkedList<Movable> list) {
+	public void removeFromGame(LinkedList<Movable> list) {
 		//The falcon is never actually removed from the game-space; instead we decrement numFalcons
 		//only execute the decrementFalconNumAndSpawn() method if shield is down.
 		if ( shield == 0)  decrementFalconNumAndSpawn();

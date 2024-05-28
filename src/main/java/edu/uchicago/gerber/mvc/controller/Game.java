@@ -11,8 +11,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Random;
 
-import static edu.uchicago.gerber.mvc.model.Movable.Team.DEBRIS;
-
 
 // ===============================================
 // == This Game class is the CONTROLLER
@@ -211,9 +209,9 @@ public class Game implements Runnable, KeyListener {
             //this block will execute the add() or remove() callbacks in the Movable models.
             GameOp.Action action = gameOp.getAction();
             if (action == GameOp.Action.ADD)
-                mov.add(list);
+                mov.addToGame(list);
             else //REMOVE
-                mov.remove(list);
+                mov.removeFromGame(list);
 
         }//end while
     }

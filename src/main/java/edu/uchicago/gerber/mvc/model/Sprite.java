@@ -243,12 +243,12 @@ public abstract class Sprite implements Movable {
 
     //default behavior for adding and removing objects from game space
     @Override
-    public void add(LinkedList<Movable> list) {
+    public void addToGame(LinkedList<Movable> list) {
         list.add(this);
     }
 
     @Override
-    public void remove(LinkedList<Movable> list) {
+    public void removeFromGame(LinkedList<Movable> list) {
         list.remove(this);
     }
 

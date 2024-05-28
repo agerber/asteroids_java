@@ -121,8 +121,8 @@ public class Asteroid extends Sprite {
 	}
 
 	@Override
-	public void remove(LinkedList<Movable> list) {
-		super.remove(list);
+	public void removeFromGame(LinkedList<Movable> list) {
+		super.removeFromGame(list);
 		spawnSmallerAsteroidsOrDebris(this);
 		//give the user some points for destroying the asteroid
 		CommandCenter.getInstance().setScore(CommandCenter.getInstance().getScore() + 10L * (getSize() + 1));

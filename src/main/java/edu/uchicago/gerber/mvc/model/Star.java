@@ -55,12 +55,12 @@ public class Star implements Movable{
 
 
     @Override
-    public void add(LinkedList<Movable> list) {
+    public void addToGame(LinkedList<Movable> list) {
         list.add(this);
     }
 
     @Override
-    public void remove(LinkedList<Movable> list) {
+    public void removeFromGame(LinkedList<Movable> list) {
        list.remove(this);
     }
 

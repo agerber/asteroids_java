@@ -20,9 +20,9 @@ public interface Movable {
 
 	//callbacks which occur before or after this object is added or removed from the game-space.
 	//this is your opportunity to add sounds or perform other side effects, before (add) or after (remove).
-	void add(LinkedList<Movable> list);
+	void addToGame(LinkedList<Movable> list);
 
-	void remove(LinkedList<Movable> list);
+	void removeFromGame(LinkedList<Movable> list);
 
 
 } //end Movable

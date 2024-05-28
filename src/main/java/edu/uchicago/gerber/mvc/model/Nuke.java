@@ -72,7 +72,7 @@ public class Nuke extends Sprite{
     }
 
     @Override
-    public void add(LinkedList<Movable> list) {
+    public void addToGame(LinkedList<Movable> list) {
         if (CommandCenter.getInstance().getFalcon().getNukeMeter() > 0){
             list.add(this);
             Sound.playSound("nuke.wav");
@@ -81,7 +81,7 @@ public class Nuke extends Sprite{
     }
 
     @Override
-    public void remove(LinkedList<Movable> list) {
+    public void removeFromGame(LinkedList<Movable> list) {
         //only remove upon natural mortality (see expire() of Sprite), otherwise a Nuke is invincible
         if (getExpiry() == 0) list.remove(this);
     }
