@@ -126,11 +126,13 @@ public class Asteroid extends Sprite {
 		spawnSmallerAsteroidsOrDebris(this);
 		//give the user some points for destroying the asteroid
 		CommandCenter.getInstance().setScore(CommandCenter.getInstance().getScore() + 10L * (getSize() + 1));
-		//if large (0) or medium (1) asteroid
-		if (getSize() < 2)
-			Sound.playSound("kapow.wav");
-		else //small (2) asteroid
+
+		//small (2) asteroids
+		if (getSize() > 1)
 			Sound.playSound("pillow.wav");
+			//else large (0) or medium (1) asteroids
+		else
+			Sound.playSound("kapow.wav");
 
 
 	}
