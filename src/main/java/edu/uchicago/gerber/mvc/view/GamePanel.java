@@ -119,7 +119,7 @@ public class GamePanel extends Panel {
         if (CommandCenter.getInstance().getFalcon().getNukeMeter() > 0) statusArray.add("PRESS N for NUKE");
 
         //draw the statusArray strings to middle of screen
-        if (statusArray.size() > 0)
+        if (!statusArray.isEmpty())
             displayTextOnScreen(graphics, statusArray.toArray(new String[0]));
 
 
