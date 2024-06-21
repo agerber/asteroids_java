@@ -1,13 +1,15 @@
-package edu.uchicago.gerber.mvc.model;
+package edu.uchicago.gerber._08final.mvc.model;
 
-import edu.uchicago.gerber.mvc.controller.CommandCenter;
-import edu.uchicago.gerber.mvc.controller.Sound;
+import edu.uchicago.gerber._08final.mvc.controller.CommandCenter;
+import edu.uchicago.gerber._08final.mvc.controller.ImageLoader;
+import edu.uchicago.gerber._08final.mvc.controller.Sound;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.awt.Point;
 
 public class Brick extends Sprite {
 
@@ -29,7 +31,7 @@ public class Brick extends Sprite {
 		// and use it.
     	Map<Integer, BufferedImage> rasterMap = new HashMap<>();
 		//brick from Mario Bros
-		rasterMap.put(BRICK_IMAGE, loadGraphic("/imgs/brick/Brick_Block100.png") );
+		rasterMap.put(BRICK_IMAGE, ImageLoader.masterImageMap.get("Brick_Block100.png"));
 
 		setRasterMap(rasterMap);
 

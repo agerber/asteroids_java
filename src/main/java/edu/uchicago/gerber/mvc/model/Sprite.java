@@ -71,7 +71,7 @@ public abstract class Sprite implements Movable {
     @Override
     public void move() {
 
-        //The following code block just keeps the sprite inside the bounds of the frame.
+        //The following code block just keeps the sprite inside the bounds of the game window.
         //To ensure this behavior among all sprites in your game, make sure to call super.move() in extending classes
         // where you need to override the move() method.
 
@@ -123,22 +123,6 @@ public abstract class Sprite implements Movable {
         int randomNumber = Game.R.nextInt(seed);
         return (randomNumber % 2 == 0) ? randomNumber : -randomNumber;
     }
-
-
-
-    //used to load raster graphics
-    protected BufferedImage loadGraphic(String imagePath) {
-        BufferedImage bufferedImage;
-        try {
-            bufferedImage = ImageIO.read(Objects.requireNonNull(Sprite.class.getResourceAsStream(imagePath)));
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            bufferedImage = null;
-        }
-        return bufferedImage;
-    }
-
 
 
     //https://www.tabnine.com/code/java/methods/java.awt.geom.AffineTransform/rotate

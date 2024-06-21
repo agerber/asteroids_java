@@ -1,15 +1,14 @@
-package edu.uchicago.gerber.mvc.model;
+package edu.uchicago.gerber._08final.mvc.model;
 
-import edu.uchicago.gerber.mvc.controller.CommandCenter;
-import edu.uchicago.gerber.mvc.controller.Game;
-import edu.uchicago.gerber.mvc.controller.Sound;
+import edu.uchicago.gerber._08final.mvc.controller.CommandCenter;
+import edu.uchicago.gerber._08final.mvc.controller.Game;
+import edu.uchicago.gerber._08final.mvc.controller.ImageLoader;
+import edu.uchicago.gerber._08final.mvc.controller.Sound;
 import lombok.Data;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 @Data
 public class Falcon extends Sprite {
@@ -36,8 +35,8 @@ public class Falcon extends Sprite {
 		FALCON_INVISIBLE, //for pre-spawning
 		FALCON, //normal ship
 		FALCON_THR, //normal ship thrusting
-		FALCON_PRO, //protected ship (green)
-		FALCON_PRO_THR, //protected ship (green) thrusting
+		FALCON_PRO, //protected ship (cyan)
+		FALCON_PRO_THR, //protected ship (cyan) thrusting
 
 	}
 
@@ -75,10 +74,10 @@ public class Falcon extends Sprite {
 		//Using enums as keys is safer b/c we know the value exists when we reference the consts later in code.
     	Map<ImageState, BufferedImage> rasterMap = new HashMap<>();
 		rasterMap.put(ImageState.FALCON_INVISIBLE, null );
-		rasterMap.put(ImageState.FALCON, loadGraphic("/imgs/fal/falcon125.png") ); //normal ship
-		rasterMap.put(ImageState.FALCON_THR, loadGraphic("/imgs/fal/falcon125_thr.png") ); //normal ship thrusting
-		rasterMap.put(ImageState.FALCON_PRO, loadGraphic("/imgs/fal/falcon125_PRO.png") ); //protected ship (green)
-		rasterMap.put(ImageState.FALCON_PRO_THR, loadGraphic("/imgs/fal/falcon125_PRO_thr.png") ); //green thrusting
+		rasterMap.put(ImageState.FALCON, ImageLoader.masterImageMap.get("falcon125.png")); //normal ship
+		rasterMap.put(ImageState.FALCON_THR, ImageLoader.masterImageMap.get("falcon125_thr.png")); //normal ship thrusting
+		rasterMap.put(ImageState.FALCON_PRO, ImageLoader.masterImageMap.get("falcon125_PRO.png")); //protected ship (cyan)
+		rasterMap.put(ImageState.FALCON_PRO_THR, ImageLoader.masterImageMap.get("falcon125_PRO_thr.png")); //cyan thrusting
 
 		setRasterMap(rasterMap);
 

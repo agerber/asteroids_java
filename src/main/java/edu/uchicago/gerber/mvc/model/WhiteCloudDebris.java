@@ -1,6 +1,8 @@
 package edu.uchicago.gerber.mvc.model;
 
 
+import edu.uchicago.gerber._08final.mvc.controller.ImageLoader;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -19,15 +21,15 @@ public class WhiteCloudDebris extends Sprite{
 
         Map<Integer, BufferedImage> rasterMap = new HashMap<>();
         //see readme.txt file in the resources/imgs/exp directory for how I created these assets
-        rasterMap.put(0, loadGraphic("/imgs/exp/row-1-column-1.png") );
-        rasterMap.put(1, loadGraphic("/imgs/exp/row-1-column-2.png") );
-        rasterMap.put(2, loadGraphic("/imgs/exp/row-1-column-3.png") );
-        rasterMap.put(3, loadGraphic("/imgs/exp/row-2-column-1.png") );
-        rasterMap.put(4, loadGraphic("/imgs/exp/row-2-column-2.png") );
-        rasterMap.put(5, loadGraphic("/imgs/exp/row-2-column-3.png") );
-        rasterMap.put(6, loadGraphic("/imgs/exp/row-3-column-1.png") );
-        rasterMap.put(7, loadGraphic("/imgs/exp/row-3-column-2.png") );
-        rasterMap.put(8, loadGraphic("/imgs/exp/row-3-column-3.png") );
+        rasterMap.put(0, ImageLoader.masterImageMap.get("row-1-column-1.png"));
+        rasterMap.put(1, ImageLoader.masterImageMap.get("row-1-column-2.png"));
+        rasterMap.put(2, ImageLoader.masterImageMap.get("row-1-column-3.png"));
+        rasterMap.put(3, ImageLoader.masterImageMap.get("row-2-column-1.png"));
+        rasterMap.put(4, ImageLoader.masterImageMap.get("row-2-column-2.png"));
+        rasterMap.put(5, ImageLoader.masterImageMap.get("row-2-column-3.png"));
+        rasterMap.put(6, ImageLoader.masterImageMap.get("row-3-column-1.png"));
+        rasterMap.put(7, ImageLoader.masterImageMap.get("row-3-column-2.png"));
+        rasterMap.put(8, ImageLoader.masterImageMap.get("row-3-column-3.png"));
 
         setRasterMap(rasterMap);
 
