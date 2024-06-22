@@ -1,7 +1,7 @@
 package edu.uchicago.gerber.mvc.model;
 
 
-import edu.uchicago.gerber._08final.mvc.controller.ImageLoader;
+import edu.uchicago.gerber.mvc.controller.ImageLoader;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

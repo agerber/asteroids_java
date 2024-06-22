@@ -1,4 +1,4 @@
-package edu.uchicago.gerber._08final.mvc.controller;
+package edu.uchicago.gerber.mvc.controller;
 
 import javax.imageio.ImageIO;
 import java.io.IOException;
