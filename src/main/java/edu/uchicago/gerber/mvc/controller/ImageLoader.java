@@ -17,7 +17,7 @@ Place all .png image assets in this directory src/main/resources/imgs or its sub
  */
 public class ImageLoader {
 
-    public static Map<String, BufferedImage> masterImageMap;
+    public static Map<String, BufferedImage> IMAGES;
     //load all images prior to runtime in the static context
     static {
         Path rootDirectory = Paths.get("src/main/resources/imgs");
@@ -27,7 +27,7 @@ public class ImageLoader {
         } catch (IOException e) {
             e.fillInStackTrace();
         }
-        masterImageMap = localMap;
+        IMAGES = localMap;
     }
 
     private static Map<String, BufferedImage> loadPngImages(Path rootDirectory) throws IOException {

@@ -74,10 +74,10 @@ public class Falcon extends Sprite {
 		//Using enums as keys is safer b/c we know the value exists when we reference the consts later in code.
     	Map<ImageState, BufferedImage> rasterMap = new HashMap<>();
 		rasterMap.put(ImageState.FALCON_INVISIBLE, null );
-		rasterMap.put(ImageState.FALCON, ImageLoader.masterImageMap.get("falcon125.png")); //normal ship
-		rasterMap.put(ImageState.FALCON_THR, ImageLoader.masterImageMap.get("falcon125_thr.png")); //normal ship thrusting
-		rasterMap.put(ImageState.FALCON_PRO, ImageLoader.masterImageMap.get("falcon125_PRO.png")); //protected ship (cyan)
-		rasterMap.put(ImageState.FALCON_PRO_THR, ImageLoader.masterImageMap.get("falcon125_PRO_thr.png")); //cyan thrusting
+		rasterMap.put(ImageState.FALCON, ImageLoader.IMAGES.get("falcon125.png")); //normal ship
+		rasterMap.put(ImageState.FALCON_THR, ImageLoader.IMAGES.get("falcon125_thr.png")); //normal ship thrusting
+		rasterMap.put(ImageState.FALCON_PRO, ImageLoader.IMAGES.get("falcon125_PRO.png")); //protected ship (cyan)
+		rasterMap.put(ImageState.FALCON_PRO_THR, ImageLoader.IMAGES.get("falcon125_PRO_thr.png")); //cyan thrusting
 
 		setRasterMap(rasterMap);
 
