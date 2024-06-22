@@ -7,9 +7,9 @@ import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.Set;
 
 
 // ===============================================
@@ -52,10 +52,6 @@ public class Game implements Runnable, KeyListener {
     //ALIEN = 65;                // A key
     // SPECIAL = 70; 					// fire special weapon;  F key
 
-    private final Clip soundThrust;
-    private final Clip soundBackground;
-
-
 
     // ===============================================
     // ==CONSTRUCTOR
@@ -65,9 +61,6 @@ public class Game implements Runnable, KeyListener {
 
         gamePanel = new GamePanel(DIM);
         gamePanel.addKeyListener(this); //Game object implements KeyListener
-        soundThrust = Sound.clipForLoopFactory("whitenoise.wav");
-        soundBackground = Sound.clipForLoopFactory("music-background.wav");
-
         //fire up the animation thread
         animationThread = new Thread(this); // pass the animation thread a runnable object, the Game object
         animationThread.setDaemon(true);
@@ -298,9 +291,10 @@ public class Game implements Runnable, KeyListener {
     }
 
 
-    // Varargs for stopping looping-music-clips
-    private static void stopLoopingSounds(Clip... clpClips) {
-        Arrays.stream(clpClips).forEach(clip -> clip.stop());
+    //or stopping looping-music-clips
+    private static void stopLoopingSounds() {
+        Set<String> keys = Sound.LOOP_SOUNDS.keySet();
+        keys.forEach(key -> Sound.LOOP_SOUNDS.get(key).stop());
     }
 
     // ===============================================
@@ -321,14 +315,14 @@ public class Game implements Runnable, KeyListener {
         switch (keyCode) {
             case PAUSE:
                 CommandCenter.getInstance().setPaused(!CommandCenter.getInstance().isPaused());
-                if (CommandCenter.getInstance().isPaused()) stopLoopingSounds(soundBackground, soundThrust);
+                if (CommandCenter.getInstance().isPaused()) stopLoopingSounds();
                 break;
             case QUIT:
                 System.exit(0);
                 break;
             case UP:
                 falcon.setThrusting(true);
-                soundThrust.loop(Clip.LOOP_CONTINUOUSLY);
+                Sound.LOOP_SOUNDS.get("whitenoise_loop.wav").loop(Clip.LOOP_CONTINUOUSLY);
                 break;
             case LEFT:
                 falcon.setTurnState(Falcon.TurnState.LEFT);
@@ -370,16 +364,16 @@ public class Game implements Runnable, KeyListener {
                 break;
             case UP:
                 falcon.setThrusting(false);
-                soundThrust.stop();
+                Sound.LOOP_SOUNDS.get("whitenoise_loop.wav").stop();
                 break;
 
             case MUTE:
                 CommandCenter.getInstance().setMuted(!CommandCenter.getInstance().isMuted());
 
                 if (!CommandCenter.getInstance().isMuted()) {
-                    stopLoopingSounds(soundBackground);
+                    stopLoopingSounds();
                 } else {
-                    soundBackground.loop(Clip.LOOP_CONTINUOUSLY);
+                    Sound.LOOP_SOUNDS.get("music-background_loop.wav").loop(Clip.LOOP_CONTINUOUSLY);
                 }
                 break;
 
