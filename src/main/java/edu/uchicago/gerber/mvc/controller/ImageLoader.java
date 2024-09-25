@@ -41,7 +41,7 @@ public class ImageLoader {
                         BufferedImage bufferedImage = ImageIO.read(file.toFile());
                         if (bufferedImage != null) {
                             //substring(18) removes "src/main/resources" so that keys/paths are simple
-                            pngImages.put(file.toString().toLowerCase().substring(18), bufferedImage);
+                            pngImages.put(file.toString().toLowerCase().replace("\\", "/").substring(18), bufferedImage);
                         }
                     } catch (IOException e) {
                         e.fillInStackTrace();
