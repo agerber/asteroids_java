@@ -1,5 +1,5 @@
 
-Open in IntelliJ or other Java IDE and run Game.java
+Import into IntelliJ (or other Java IDE) as maven project, and run Game.java
 
 ## Java Design Patterns
 The following design patterns are annotated in this project as TODOs:
